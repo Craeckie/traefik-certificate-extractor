@@ -90,13 +90,13 @@ def createCerts(args):
     data = json.loads(open(args.certificate).read())
 
     # Determine challenge
-    if self.traefik_version == 2:
+    if args.traefikVersion == 2:
         if args.challenge:
             data = data[args.challenge]
         elif len(list(data.keys())) == 1:
             args.challenge = list(data.keys())[0]
             print('Using challenge: ' + args.challenge)
-            data = data[self.challenge]
+            data = data[args.challenge]
         else:
             print('Available challenges: ' +
                   (', '.join([str(x) for x in list(data.keys())])))
