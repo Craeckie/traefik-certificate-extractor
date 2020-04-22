@@ -122,10 +122,16 @@ def createCerts(args):
             fullchain = c['Certificate']['Certificate']
             sans = c['Domains']['SANs']
         elif acme_version == 2:
-            name = c['Domain']['Main']
-            privatekey = c['Key']
-            fullchain = c['Certificate']
-            sans = c['Domain']['SANs']
+            if args.challenge: # if traefik v2
+                name = c['domain']['main']
+                privatekey = c['key']
+                fullchain = c['certificate']
+                sans = []
+            else:
+                name = c['Domain']['Main']
+                privatekey = c['Key']
+                fullchain = c['Certificate']
+                sans = c['Domain']['SANs']
 
         if (args.include and name not in args.include) or (args.exclude and name in args.exclude):
             continue
