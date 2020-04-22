@@ -229,8 +229,10 @@ if __name__ == "__main__":
     print('DEBUG: watching path: ' + str(args.certificate))
     print('DEBUG: output path: ' + str(args.directory))
 
-    # Create event handler and observer
+    # Create event handler and start once
     event_handler = Handler(args)
+    event_handler.doTheWork()
+    
     observer = Observer()
 
     # Register the directory to watch
