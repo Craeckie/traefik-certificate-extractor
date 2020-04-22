@@ -89,6 +89,20 @@ def createCerts(args):
     # Read JSON file
     data = json.loads(open(args.certificate).read())
 
+    # Determine challenge
+    if self.traefik_version == 2:
+        if args.challenge:
+            data = data[args.challenge]
+        elif len(list(data.keys())) == 1:
+            args.challenge = list(data.keys())[0]
+            print('Using challenge: ' + args.challenge)
+            data = data[self.challenge]
+        else:
+            print('Available challenges: ' +
+                  (', '.join([str(x) for x in list(data.keys())])))
+            raise ValueError(
+                'Multiple challenges found, please choose one with --challenge option')
+    
     # Determine ACME version
     acme_version = 2 if 'acme-v02' in data['Account']['Registration']['uri'] else 1
 
@@ -218,6 +232,10 @@ if __name__ == "__main__":
                         help='outputs all certificates into one folder')
     parser.add_argument('-r', '--restart_container', action='store_true',
                         help="uses the docker API to restart containers that are labeled with 'com.github.SnowMB.traefik-certificate-extractor.restart_domain=<DOMAIN>' if the domain name of a generated certificates matches. Multiple domains can be seperated by ','")
+    parser.add_argument('-tv', '--traefikVersion', type=int,
+                    choices=[1, 2], default=2, help='Traefik version')
+    parser.add_argument('--challenge',
+                        help='Traefik challenge to use (only for traefik v2)')
     parser.add_argument('--dry-run', action='store_true', dest='dry',
                         help="Don't write files and do not start docker containers.")
     group = parser.add_mutually_exclusive_group()
