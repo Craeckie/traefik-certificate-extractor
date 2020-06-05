@@ -104,7 +104,7 @@ def createCerts(args):
                 'Multiple challenges found, please choose one with --challenge option')
     
     # Determine ACME version
-    acme_version = 2 if 'acme-v02' in data['Account']['Registration']['uri'] else 1
+    acme_version = 2 # if 'acme-v02' in data['Account']['Registration']['uri'] else 1
 
     # Find certificates
     if acme_version == 1:
